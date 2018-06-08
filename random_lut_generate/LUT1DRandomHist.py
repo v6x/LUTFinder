@@ -1,10 +1,12 @@
 import os
 import sys
+import random
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
 from utils.QuadraticFunction import QuadraticFunction
 from utils.LinearFunction import get_linearfunction_from_two_point
-from LUT1D import LUT1D
-import random
+from random_lut_generate.LUT1D import LUT1D
+
 
 def random_0_to_1():
     val = random.uniform(0., 1.)
@@ -12,6 +14,7 @@ def random_0_to_1():
     while(0.2 < val and  val < 0.8):
         val = random.uniform(0., 1.)
     return val
+
 
 def make_random_hists(hist_num):
     hists = []

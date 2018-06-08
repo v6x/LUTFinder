@@ -1,4 +1,5 @@
 random_lut_generate/__pycache__/
 utils/__pycache__/
+lut_apply/__pycache__/
 .idea/
 .env/

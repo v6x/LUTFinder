@@ -18,6 +18,9 @@ class LUT1D:
                  xrange, self.color_map['b'], 'b')
         plt.show()
 
+    def get_np_colormap(self, channel):
+        return np.array(self.color_map[channel], dtype=np.uint8)
+
     def apply_to_image(self, numpy_image):
         """
         :param numpy_image: a numpy array which has shape of (width, height, channels).

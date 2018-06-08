@@ -1,5 +1,6 @@
 import pyopencl as cl
-
+import os
+os.environ['PYOPENCL_COMPILER_OUTPUT'] = '1'
 
 class PyOpenCLRunner:
     def __init__(self):
@@ -7,19 +8,20 @@ class PyOpenCLRunner:
         self.device = None
         self.context = None
         self.queue = None
+        self.setup()
 
     def setup(self):
         platforms = cl.get_platforms()
         print("<<<Platforms>>>")
         for i in range(len(platforms)):
             print("[%d]: " % i, platforms[i])
-        platform_num = input("type platform number:")
+        platform_num = int(input("type platform number:"))
         platform = platforms[platform_num]
         devices = platform.get_devices()
         print("<<<Devices>>>")
         for i in range(len(devices)):
             print("[%d]: " % i, devices[i])
-        device_num = input("type device number:")
+        device_num = int(input("type device number:"))
         device = devices[device_num]
         context = cl.Context([device])
         queue = cl.CommandQueue(context)
@@ -32,14 +34,14 @@ class PyOpenCLRunner:
     def build_program(self, program):
         return cl.Program(self.context, program).build()
 
-    def alloc_buffer(self, flag, size):
+    def alloc_buf(self, flag, size):
         return cl.Buffer(self.context, flag, size)
 
-    def read_buf(self, src, dst):
-        cl.enqueue_read_buffer(self.queue, src, dst)
+    def read_buf(self, src_device, dst_host):
+        cl.enqueue_read_buffer(self.queue, src_device, dst_host)
 
-    def write_buf(self, src, dst):
-        cl.enqueue_write_buffer(self.queue, src, dst)
+    def write_buf(self, src_host, dst_device):
+        cl.enqueue_write_buffer(self.queue, dst_device, src_host)
 
     def exec_program(self, func, global_size, *args):
         func(self.queue, global_size, None, *args)
