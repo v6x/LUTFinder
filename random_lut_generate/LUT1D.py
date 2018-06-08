@@ -1,5 +1,6 @@
 import abc
 import matplotlib.pylab as plt
+import numpy as np
 
 class LUT1D:
     __metaclass__ = abc.ABCMeta
@@ -30,5 +31,7 @@ class LUT1D:
                 numpy_image[x, y, 1] = self.color_map['g'][numpy_image[x, y, 1]]
                 numpy_image[x, y, 2] = self.color_map['r'][numpy_image[x, y, 2]]
 
+    def numpy_color_map(self, channel):
+        return np.array(self.color_map[channel], dtype=np.uint8)
 
 

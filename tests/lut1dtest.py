@@ -20,5 +20,14 @@ def lut1d_speed_test():
     print("iter %d, total %f sec elapsed, %f sec per iter" % (test_num, elapsed_time, elapsed_time / test_num))
 
 
+def lut1d_result_img_test():
+    lut1d = LUT1DRandomHist(5)
+    img = cv2.imread('../resources/testimage1.png', cv2.IMREAD_COLOR)
+
+    lut1d.apply_to_image(img)
+    cv2.imshow("converted image", img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 if __name__ == "__main__":
-    lut1d_speed_test()
+    lut1d_result_img_test()
