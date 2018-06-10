@@ -2,6 +2,7 @@ import pyopencl as cl
 import os
 os.environ['PYOPENCL_COMPILER_OUTPUT'] = '1'
 
+
 class PyOpenCLRunner:
     def __init__(self):
         self.platform = None
@@ -38,10 +39,10 @@ class PyOpenCLRunner:
         return cl.Buffer(self.context, flag, size)
 
     def read_buf(self, src_device, dst_host):
-        cl.enqueue_read_buffer(self.queue, src_device, dst_host)
+        cl.enqueue_copy(self.queue, dst_host, src_device)
 
     def write_buf(self, src_host, dst_device):
-        cl.enqueue_write_buffer(self.queue, dst_device, src_host)
+        cl.enqueue_copy(self.queue, dst_device, src_host)
 
     def exec_program(self, func, global_size, *args):
         func(self.queue, global_size, None, *args)
