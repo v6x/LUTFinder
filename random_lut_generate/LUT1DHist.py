@@ -16,6 +16,15 @@ def random_0_to_1():
     return val
 
 
+def make_fixed_hists(floats):
+    hists = []
+    for i in range(len(floats)):
+        float = floats[i]
+        point_pair = (1. / (len(floats) - 1) * i, float)
+        hists.append(point_pair)
+    return hists
+
+
 def make_random_hists(hist_num):
     hists = []
     for i in range(hist_num):
