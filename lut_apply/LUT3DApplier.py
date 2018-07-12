@@ -7,7 +7,7 @@ class LUT3DApplier:
         # TODO Can be optimized more to use local memory but for now this is fast enough
         program_code = """
         __kernel void lut_apply(__global const uchar *img,
-        __global const uchar *lut_b, __global const uchar *lut_g, __global const uchar *lut_r, 
+        __global const uchar *lut_b, __global const uchar *lut_g, __global const uchar *lut_r, __global const float *lut_portion,
         __global uchar *result_img)
         {
             int gid = get_global_id(0);
@@ -90,7 +90,7 @@ class LUT3DApplier:
                                             + nearest_5_b * portion_5  
                                             + nearest_6_b * portion_6  
                                             + nearest_7_b * portion_7  
-                                            + nearest_8_b * portion_8 );
+                                            + nearest_8_b * portion_8 ) * lut_portion[0] + b * (1 - lut_portion[0]);
             result_img[3 * gid + 1] = (uchar) (nearest_1_g * portion_1  
                                             + nearest_2_g * portion_2  
                                             + nearest_3_g * portion_3  
@@ -98,7 +98,7 @@ class LUT3DApplier:
                                             + nearest_5_g * portion_5  
                                             + nearest_6_g * portion_6  
                                             + nearest_7_g * portion_7  
-                                            + nearest_8_g * portion_8 );
+                                            + nearest_8_g * portion_8 ) * lut_portion[0] + g * (1 - lut_portion[0]);
             result_img[3 * gid + 2] = (uchar) (nearest_1_r * portion_1  
                                             + nearest_2_r * portion_2  
                                             + nearest_3_r * portion_3  
@@ -106,7 +106,7 @@ class LUT3DApplier:
                                             + nearest_5_r * portion_5  
                                             + nearest_6_r * portion_6  
                                             + nearest_7_r * portion_7  
-                                            + nearest_8_r * portion_8 );
+                                            + nearest_8_r * portion_8 ) * lut_portion[0] + r * (1 - lut_portion[0]);
         }
         """
         program = pyopencl_runner.build_program(program_code)
@@ -119,12 +119,15 @@ class LUT3DApplier:
         self.lut_b_buf = pyopencl_runner.alloc_buf(cl.mem_flags.READ_ONLY, LUT_3D_SIZE)
         self.lut_g_buf = pyopencl_runner.alloc_buf(cl.mem_flags.READ_ONLY, LUT_3D_SIZE)
         self.lut_r_buf = pyopencl_runner.alloc_buf(cl.mem_flags.READ_ONLY, LUT_3D_SIZE)
+        self.lut_portion_buf = pyopencl_runner.alloc_buf(cl.mem_flags.READ_ONLY, 4)
         self.result_img_buf = pyopencl_runner.alloc_buf(cl.mem_flags.WRITE_ONLY, img_size)
 
-    def execute(self, img, lut):
+    def execute(self, img, lut, portion):
         lut_b = lut.get_np_colormap('b')
         lut_g = lut.get_np_colormap('g')
         lut_r = lut.get_np_colormap('r')
+        np_portion = np.ndarray(shape=(1,), dtype=np.float32)
+        np_portion[0] = portion
         assert img.nbytes == self.img_size
         assert lut_b.nbytes == LUT_3D_SIZE
         assert lut_g.nbytes == LUT_3D_SIZE
@@ -135,10 +138,11 @@ class LUT3DApplier:
         pyopencl_runner.write_buf(lut_b, self.lut_b_buf)
         pyopencl_runner.write_buf(lut_g, self.lut_g_buf)
         pyopencl_runner.write_buf(lut_r, self.lut_r_buf)
+        pyopencl_runner.write_buf(np_portion, self.lut_portion_buf)
 
         pixels = (img.shape[0] * img.shape[1],)
         pyopencl_runner.exec_program(self.program.lut_apply, pixels,
-                                     self.img_buf, self.lut_b_buf, self.lut_g_buf, self.lut_r_buf, self.result_img_buf)
+                                     self.img_buf, self.lut_b_buf, self.lut_g_buf, self.lut_r_buf, self.lut_portion_buf, self.result_img_buf)
         result_img = np.empty(img.shape, dtype=img.dtype)
         pyopencl_runner.read_buf(self.result_img_buf, result_img)
         pyopencl_runner.finish()

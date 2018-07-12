@@ -32,7 +32,7 @@ if __name__ == "__main__":
     pyopencl_runner = PyOpenCLRunner()
     lut_applier = LUT3DApplier(pyopencl_runner, img.nbytes)
 
-    new_img = lut_applier.execute(img, lut3d)
+    new_img = lut_applier.execute(img, lut3d, 1.0)
 
     cv2.imshow("gpu converted image", new_img)
     cv2.waitKey(0)
