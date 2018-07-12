@@ -4,7 +4,7 @@ import cv2
 import time
 import unittest
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-from random_lut_generate.LUT1DRandomHist import LUT1DRandomHist
+from random_lut_generate.LUT1DHist import LUT1DRandomHist
 from lut_apply.LUT1DApplier import LUT1DApplier
 from utils.PyOpenCLRunner import PyOpenCLRunner
 
