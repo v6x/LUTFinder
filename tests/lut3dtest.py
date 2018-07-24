@@ -23,7 +23,7 @@ class LUT3DApplyTest(unittest.TestCase):
         start_time = time.time()
         for i in range(test_num):
             copied_img = img[:]
-            new_img = lut_applier.execute(copied_img, lut3d)
+            new_img = lut_applier.execute(copied_img, lut3d, 1, 1.0)
 
         elapsed_time = time.time() - start_time
         # currently about 0.005 sec per processing one 1280x720 image

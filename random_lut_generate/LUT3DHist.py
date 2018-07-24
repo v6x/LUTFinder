@@ -4,8 +4,6 @@ import random
 import numpy as np
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
-from utils.QuadraticFunction import QuadraticFunction
-from utils.LinearFunction import get_linearfunction_from_two_point
 from utils.UtilFunctions import interpolate_from_ndarray
 from random_lut_generate.LUT3D import LUT3D
 
