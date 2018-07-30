@@ -25,15 +25,16 @@ class LUT3DApplier:
             int g_idx = g / 4;
             int r_idx = r / 4;
             
+            float epsilon = 0.00001;
             
-            float dis_1 = sqrt((float)(b_offset * b_offset + g_offset * g_offset + r_offset * r_offset));
-            float dis_2 = sqrt((float)(b_offset * b_offset + g_offset * g_offset + r_unoffset * r_unoffset));
-            float dis_3 = sqrt((float)(b_offset * b_offset + g_unoffset * g_unoffset + r_offset * r_offset));
-            float dis_4 = sqrt((float)(b_offset * b_offset + g_unoffset * g_unoffset + r_unoffset * r_unoffset));
-            float dis_5 = sqrt((float)(b_unoffset * b_unoffset + g_offset * g_offset + r_offset * r_offset));
-            float dis_6 = sqrt((float)(b_unoffset * b_unoffset + g_offset * g_offset + r_unoffset * r_unoffset));
-            float dis_7 = sqrt((float)(b_unoffset * b_unoffset + g_unoffset * g_unoffset + r_offset * r_offset));
-            float dis_8 = sqrt((float)(b_unoffset * b_unoffset + g_unoffset * g_unoffset + r_unoffset * r_unoffset));
+            float dis_1 = 1 / (sqrt((float)(b_offset * b_offset + g_offset * g_offset + r_offset * r_offset)) + epsilon);
+            float dis_2 = 1 / (sqrt((float)(b_offset * b_offset + g_offset * g_offset + r_unoffset * r_unoffset)) + epsilon);
+            float dis_3 = 1 / (sqrt((float)(b_offset * b_offset + g_unoffset * g_unoffset + r_offset * r_offset)) + epsilon);
+            float dis_4 = 1 / (sqrt((float)(b_offset * b_offset + g_unoffset * g_unoffset + r_unoffset * r_unoffset))+ epsilon);
+            float dis_5 = 1 / (sqrt((float)(b_unoffset * b_unoffset + g_offset * g_offset + r_offset * r_offset))+ epsilon);
+            float dis_6 = 1 / (sqrt((float)(b_unoffset * b_unoffset + g_offset * g_offset + r_unoffset * r_unoffset))+ epsilon);
+            float dis_7 = 1 / (sqrt((float)(b_unoffset * b_unoffset + g_unoffset * g_unoffset + r_offset * r_offset))+ epsilon);
+            float dis_8 = 1 / (sqrt((float)(b_unoffset * b_unoffset + g_unoffset * g_unoffset + r_unoffset * r_unoffset))+ epsilon);
             
             float sum_dis = dis_1 + dis_2 + dis_3 + dis_4 + dis_5 + dis_6 + dis_7 + dis_8;
             
